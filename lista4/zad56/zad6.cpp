@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 
-#include "Splay.hpp"
+#include "SBST.hpp"
 #include "generator.hpp"
 
 int main(int argc, char** argv) {
@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 
     for(int n = 10000; n <= 100000; n += 10000) {
         for(int i = 0; i < 20; i++) {
-            Splay drzewo = Splay();
+            SBST drzewo = SBST();
 
             std::vector<int> liczby1;
             generator_asc(liczby1, n);
@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
 
     for(int n = 10000; n <= 100000; n += 10000) {
         for(int i = 0; i < 20; i++) {
-            Splay drzewo = Splay();
+            SBST drzewo = SBST();
 
             std::vector<int> liczby1;
             generator_rand(liczby1, n);

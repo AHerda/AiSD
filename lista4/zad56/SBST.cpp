@@ -9,156 +9,421 @@ auto SBST::getRoot() -> std::shared_ptr<Node>
     return root;
 }
 
-auto SBST::rotateLeft(std::shared_ptr<Node> node) -> void
-{
-    counter_swap+=2;
-    auto y = node->right;
-    node->right = y->left;
-
-    counter_swap++;
-    if(y->left != nullptr) {
-        y->left->parent = node;
-        counter_swap++;
-    }
-
-    counter_swap+=2;
-    y->parent = node->parent;
-
-    if(node->parent == nullptr){
-        counter_swap++;
-        this->root = y;
-    }
-    else if(node == node->parent->left){
-        counter_swap+=2;
-        node->parent->left = y;
-    }
-    else{
-        node->parent->right = y;
-        counter_swap+=2;
-    }
-
-    counter_swap+=2;
-    y->left = node;
-    node->parent = y;
-}
-
-auto SBST::rotateRight(std::shared_ptr<Node> node) -> void
+auto SBST::rotateLeft(std::shared_ptr<Node> x) -> void
 {
     counter_swap+=3;
-    auto y = node->left;
-    node->left = y->right;
+    auto y = x->right;
+    x->right = y->left;
 
-    if(y->right != nullptr) {
+    if (y->left != nullptr){
+        y->left->parent = x;
         counter_swap++;
-        y->right->parent = node;
+    }
+    counter_swap+=2;
+    y->parent = x->parent;
+    if (x->parent == nullptr){
+        this->root = y;
+        counter_swap++;
+    }
+    else if (x == x->parent->left){
+        x->parent->left = y;
+        counter_swap+=2;
+    }
+    else{
+        x->parent->right = y;
+        counter_swap+=2;
     }
 
     counter_swap+=2;
-    y->parent = node->parent;
-    if(node->parent == nullptr){
+    y->left = x;
+    x->parent = y;
+}
+
+auto SBST::rotateRight(std::shared_ptr<Node> x) -> void
+{
+    counter_swap+=3;
+    auto y = x->left;
+    x->left = y->right;
+
+    if (y->right != nullptr){
+        y->right->parent = x;
+        counter_swap++;
+    }
+    counter_swap+=2;
+    y->parent = x->parent;
+    if (x->parent == nullptr){
         counter_swap++;
         this->root = y;
     }
-    else if(node == node->parent->right){
+    else if (x == x->parent->right){
+        x->parent->right = y;
         counter_swap+=2;
-        node->parent->right = y;
     }
     else{
+        x->parent->left = y;
         counter_swap+=2;
-        node->parent->left = y;
     }
 
     counter_swap+=2;
-    y->right = node;
-    node->parent = y;
+    y->right = x;
+    x->parent = y;
 }
 
-auto SBST::splay(std::shared_ptr<Node> node) -> void
+auto SBST::splay(std::shared_ptr<Node> x) -> void
 {
-    while (node->parent)
+    counter_swap++;
+    while (x->parent)
     {
-        if(!node->parent->parent)
+        counter_swap++;
+        if (!x->parent->parent)
         {
-            if(node == node->parent->left)
+            counter_swap++;
+            if (x == x->parent->left)
             {
-                rotateRight(node->parent);
+                rotateRight(x->parent);
             }
             else
             {
-                rotateLeft(node->parent);
+                rotateLeft(x->parent);
             }
         }
-        else if(node == node->parent->left && node->parent == node->parent->parent->left)
+        else if (x == x->parent->left && x->parent == x->parent->parent->left)
         {
-            rotateRight(node->parent->parent);
-            rotateRight(node->parent);
+            counter_swap++;
+            rotateRight(x->parent->parent);
+            rotateRight(x->parent);
         }
-        else if(node == node->parent->right && node->parent == node->parent->parent->right)
+        else if (x == x->parent->right && x->parent == x->parent->parent->right)
         {
-            rotateLeft(node->parent->parent);
-            rotateLeft(node->parent);
+            counter_swap+=2;
+            rotateLeft(x->parent->parent);
+            rotateLeft(x->parent);
         }
-        else if(node == node->parent->right && node->parent == node->parent->parent->left)
+        else if (x == x->parent->right && x->parent == x->parent->parent->left)
         {
-            rotateLeft(node->parent);
-            rotateRight(node->parent);
+            counter_swap+=3;
+            rotateLeft(x->parent);
+            rotateRight(x->parent);
         }
         else
         {
-            rotateRight(node->parent);
-            rotateLeft(node->parent);
+            counter_swap+=3;
+            rotateRight(x->parent);
+            rotateLeft(x->parent);
         }
     }
 }
 
 auto SBST::minimum(std::shared_ptr<Node> node) -> std::shared_ptr<Node>
 {
-    if(node->left == nullptr)
+    counter_swap++;
+    if (node->left == nullptr)
         return node;
     return minimum(node->left);
 }
 
 auto SBST::maximum(std::shared_ptr<Node> node) -> std::shared_ptr<Node>
 {
-    if(node->right == nullptr)
+    if (node->right == nullptr)
         return node;
     return maximum(node->right);
 }
 
 auto SBST::join(std::shared_ptr<Node> leftSubtree, std::shared_ptr<Node> rightSubtree) -> std::shared_ptr<Node>
 {
-    if(leftSubtree == nullptr || rightSubtree == nullptr)
-        return leftSubtree ? leftSubtree : rightSubtree;
+    if (leftSubtree == nullptr || rightSubtree == nullptr)
+        return (leftSubtree != nullptr) ? leftSubtree : rightSubtree;
 
     auto x = maximum(leftSubtree);
     splay(x);
+
+    counter_swap+=2;
     x->right = rightSubtree;
     x->parent = x;
 
     return x;
 }
 
-auto SBST::split(std::shared_ptr<Node> node, std::shared_ptr<Node> &leftSubtree, std::shared_ptr<Node> &rightSubtree) -> void
+auto SBST::split(std::shared_ptr<Node> x, std::shared_ptr<Node> &leftSubtree, std::shared_ptr<Node> &rightSubtree) -> void
 {
-    splay(node);
-    if(node->right)
+    splay(x);
+    counter_swap++;
+    if (x->right)
     {
-        rightSubtree = node->right;
+        counter_swap+=2;
+        rightSubtree = x->right;
         rightSubtree->parent = nullptr;
     }
     else
     {
+        counter_swap++;
         rightSubtree = nullptr;
     }
-    leftSubtree = node;
+
+    counter_swap+=3;
+    leftSubtree = x;
     leftSubtree->right = nullptr;
-    if(rightSubtree)
+    if (rightSubtree)
     {
+        counter_swap++;
         rightSubtree->parent = nullptr;
     }
 }
 
-void SBST::print_recursive(std::shared_ptr<Node> node, int depth, char prefix) {
+
+
+auto SBST::insert(int key) -> void
+{
+    auto node = std::make_shared<Node>(key);
+    node->parent = nullptr;
+    node->left = nullptr;
+    node->right = nullptr;
+    std::shared_ptr<Node> y = nullptr;
+    auto x = this->root;
+    counter_swap+=7;
+
+    while (x != nullptr)
+    {
+        counter_swap+=3;
+        y = x;
+        counter_if++;
+        if (node->key < x->key)
+        {
+            x = x->left;
+        }
+        else
+        {
+            x = x->right;
+        }
+    }
+
+    counter_swap+=2;
+    node->parent = y;
+    if (y == nullptr)
+    {
+        counter_swap++;
+        root = node;
+    }
+    else if (node->key < y->key)
+    {
+        counter_swap++;
+        counter_if++;
+        y->left = node;
+    }
+    else
+    {
+        counter_swap++;
+        counter_if++;
+        y->right = node;
+    }
+
+    splay(node);
+}
+
+auto SBST::preOrderHelper(std::shared_ptr<Node> node) -> void
+{
+    if (node != nullptr)
+    {
+        std::cout << node->key << " ";
+        preOrderHelper(node->left);
+        preOrderHelper(node->right);
+    }
+}
+
+auto SBST::preorder() -> void
+{
+    preOrderHelper(root);
+}
+
+auto SBST::inOrderHelper(std::shared_ptr<Node> node) -> void
+{
+    if (node != nullptr)
+    {
+        inOrderHelper(node->left);
+        std::cout << node->key << " ";
+        inOrderHelper(node->right);
+    }
+}
+
+auto SBST::inorder() -> void
+{
+    inOrderHelper(root);
+}
+
+auto SBST::postOrderHelper(std::shared_ptr<Node> node) -> void
+{
+    if (node != nullptr)
+    {
+        postOrderHelper(node->left);
+        postOrderHelper(node->right);
+        std::cout << node->key << " ";
+    }
+}
+
+auto SBST::postorder() -> void
+{
+    postOrderHelper(root);
+}
+
+auto SBST::searchInTreeHelper(std::shared_ptr<Node> node, int key) -> std::shared_ptr<Node>
+{
+    if (node == nullptr || key == node->key)
+    {
+        return node;
+    }
+
+    if (key < node->key)
+    {
+        return searchInTreeHelper(node->left, key);
+    }
+    return searchInTreeHelper(node->right, key);
+}
+
+auto SBST::searchInTree(int key) -> std::shared_ptr<Node>
+{
+    auto x = searchInTreeHelper(root, key);
+    if (x)
+    {
+        splay(x);
+    }
+    return x;
+}
+
+auto SBST::successor(std::shared_ptr<Node> x) -> std::shared_ptr<Node>
+{
+    counter_swap++;
+    if (x->right != nullptr)
+    {
+        return minimum(x->right);
+    }
+
+    counter_swap+=3;
+    auto y = x->parent;
+    while (y != nullptr && x == y->right)
+    {
+        counter_swap+=3;
+        x = y;
+        y = y->parent;
+    }
+
+    return y;
+}
+
+auto SBST::predecessor(std::shared_ptr<Node> x) -> std::shared_ptr<Node>
+{
+    counter_swap++;
+    if (x->left != nullptr)
+    {
+        return maximum(x->left);
+    }
+
+    counter_swap+=3;
+    auto y = x->parent;
+    while (y != nullptr && x == y->left)
+    {
+        counter_swap+=3;
+        x = y;
+        y = y->parent;
+    }
+
+    return y;
+}
+
+auto SBST::deleteNodeHelper(std::shared_ptr<Node> node, int key) -> void
+{
+    std::shared_ptr<Node> x = nullptr;
+    std::shared_ptr<Node> t, s;
+    std::shared_ptr<Node> currentNode = node;
+    counter_swap+=3;
+    while (currentNode != nullptr)
+    {
+        counter_swap++;
+        counter_if++;
+        if (currentNode->key == key)
+        {
+            counter_swap++;
+            x = currentNode;
+            break;
+        }
+
+        counter_if++;
+        if (currentNode->key < key)
+        {
+            counter_swap++;
+            currentNode = currentNode->right;
+        }
+        else
+        {
+            counter_swap++;
+            currentNode = currentNode->left;
+        }
+    }
+
+    counter_swap++;
+    if (x == nullptr)
+    {
+        return;
+    }
+
+    splay(x);
+    counter_swap++;
+    if (!x->left)
+    {
+        counter_swap+=2;
+        root = x->right;
+        if (root)
+        {
+            counter_swap++;
+            root->parent = nullptr;
+        }
+        return;
+    }
+    else if (!x->right)
+    {
+        counter_swap+=3;
+        root = x->left;
+        if (root)
+        {
+            counter_swap++;
+            root->parent = nullptr;
+        }
+        return;
+    }
+
+    auto maxLeft = maximum(x->left);
+    splay(maxLeft);
+    maxLeft->right = x->right;
+    counter_swap+=3;
+    if (maxLeft->right)
+    {
+        counter_swap++;
+        maxLeft->right->parent = maxLeft;
+    }
+
+    counter_swap+=2;
+    root = maxLeft;
+    root->parent = nullptr;
+}
+
+auto SBST::remove(int key) -> void
+{
+    deleteNodeHelper(root, key);
+}
+
+auto SBST::height_recursive(std::shared_ptr<Node> node) -> int
+{
+    if (node == nullptr)
+        return 0;
+    int leftHeight = height_recursive(node->left);
+    int rightHeight = height_recursive(node->right);
+    return std::max(leftHeight, rightHeight) + 1;
+}
+
+auto SBST::height() -> int {
+    return height_recursive(root);
+}
+
+auto SBST::print_recursive(std::shared_ptr<Node> node, int depth, char prefix) -> void {
     if(node == nullptr) return;
     if(node->left != nullptr) print_recursive(node->left, depth + 1, '/');
 
@@ -198,227 +463,4 @@ void SBST::print_BST() {
 
     delete [] left_trace;
     delete [] right_trace;
-}
-
-auto SBST::insert(int key) -> void
-{
-    auto node = std::make_shared<Node>(key);
-    node->parent = nullptr;
-    node->left = nullptr;
-    node->right = nullptr;
-    std::shared_ptr<Node> y = nullptr; // jawnie musze pokazac ze przypisuje nullptr
-    auto x = this->root;
-
-    while (x != nullptr)
-    {
-        y = x;
-        if(node->key < x->key)
-        {
-            x = x->left;
-        }
-        else
-        {
-            x = x->right;
-        }
-    }
-
-    node->parent = y;
-    if(y == nullptr)
-    {
-        node = node;
-    }
-    else if(node->key < y->key)
-    {
-        y->left = node;
-    }
-    else
-    {
-        y->right = node;
-    }
-
-    splay(node);
-}
-
-auto SBST::preOrderHelper(std::shared_ptr<Node> node) -> void
-{
-    if(node != nullptr)
-    {
-        std::cout << node->key << " ";
-        preOrderHelper(node->left);
-        preOrderHelper(node->right);
-    }
-}
-
-auto SBST::preorder() -> void
-{
-    preOrderHelper(root);
-}
-
-auto SBST::inOrderHelper(std::shared_ptr<Node> node) -> void
-{
-    if(node != nullptr)
-    {
-        inOrderHelper(node->left);
-        std::cout << node->key << " ";
-        inOrderHelper(node->right);
-    }
-}
-
-auto SBST::inorder() -> void
-{
-    inOrderHelper(root);
-}
-
-auto SBST::postOrderHelper(std::shared_ptr<Node> node) -> void
-{
-    if(node != nullptr)
-    {
-        postOrderHelper(node->left);
-        postOrderHelper(node->right);
-        std::cout << node->key << " ";
-    }
-}
-
-auto SBST::postorder() -> void
-{
-    postOrderHelper(root);
-}
-
-auto SBST::searchInTreeHelper(std::shared_ptr<Node> node, int key) -> std::shared_ptr<Node>
-{
-    if(node == nullptr || key == node->key)
-    {
-        return node;
-    }
-
-    if(key < node->key)
-    {
-        return searchInTreeHelper(node->left, key);
-    }
-    return searchInTreeHelper(node->right, key);
-}
-
-auto SBST::searchInTree(int key) -> std::shared_ptr<Node>
-{
-    auto x = searchInTreeHelper(root, key);
-    if(x)
-    {
-        splay(x);
-    }
-    return x;
-}
-
-auto SBST::successor(std::shared_ptr<Node> x) -> std::shared_ptr<Node>
-{
-    if(x->right != nullptr)
-    {
-        return minimum(x->right);
-    }
-
-    auto y = x->parent;
-    while (y != nullptr && x == y->right)
-    {
-        x = y;
-        y = y->parent;
-    }
-
-    return y;
-}
-
-auto SBST::predecessor(std::shared_ptr<Node> x) -> std::shared_ptr<Node>
-{
-    if(x->left != nullptr)
-    {
-        return maximum(x->left);
-    }
-
-    auto y = x->parent;
-    while (y != nullptr && x == y->left)
-    {
-        x = y;
-        y = y->parent;
-    }
-
-    return y;
-}
-
-auto SBST::deleteNodeHelper(std::shared_ptr<Node> node, int key) -> void
-{
-    std::shared_ptr<Node> x = nullptr;
-    std::shared_ptr<Node> t, s;
-    std::shared_ptr<Node> currentNode = node;
-    while (currentNode != nullptr)
-    {
-        if(currentNode->key == key)
-        {
-            x = currentNode;
-            break;
-        }
-
-        if(currentNode->key < key)
-        {
-            currentNode = currentNode->right;
-        }
-        else
-        {
-            currentNode = currentNode->left;
-        }
-    }
-
-    if(x == nullptr)
-    {
-        return;
-    }
-
-    splay(x);
-
-    if(!x->left)
-    {
-        node = x->right;
-        if(node)
-        {
-            node->parent = nullptr;
-        }
-        return;
-    }
-    else if(!x->right)
-    {
-        node = x->left;
-        if(node)
-        {
-            node->parent = nullptr;
-        }
-        return;
-    }
-
-    auto maxLeft = maximum(x->left);
-    splay(maxLeft);
-
-    maxLeft->right = x->right;
-
-    if(maxLeft->right)
-    {
-        maxLeft->right->parent = maxLeft;
-    }
-
-    node = maxLeft;
-    maxLeft->parent = nullptr;
-}
-
-auto SBST::remove(int key) -> void
-{
-    deleteNodeHelper(root, key);
-}
-
-auto SBST::height_recursive(std::shared_ptr<Node> node) -> int {
-    if(node == nullptr) return 0;
-
-    int lh = height_recursive(node->left);
-    int rh = height_recursive(node->right);
-
-    return std::max(lh, rh) + 1;
-}
-
-auto SBST::height() -> int {
-    return height_recursive(root);
 }
