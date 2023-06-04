@@ -24,8 +24,11 @@ int main(int argc, char** argv) {
             for(int x : liczby2) {
                 drzewo.remove(x);
             }
-            myfile << n << " " << drzewo.counter_if << " " << drzewo.counter_swap << " " << drzewo.height();
+            myfile << n << " " << drzewo.counter_if << " " << drzewo.counter_swap << " " << drzewo.height() << std::endl;
         }
     }
+
     myfile.close();
+    
+    return 0;
 }

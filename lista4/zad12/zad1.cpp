@@ -20,18 +20,20 @@ int main(int argc, char** argv) {
     generator_asc(liczby1, 50);
 
     for(int i : liczby1) {
-        std::cout << "remove(" << i << ") " << drzewo1->remove(i) << std::endl;
+        drzewo1->remove(i);
+        std::cout << "remove(" << i << ") " << std::endl;
         drzewo1->print_BST();
     }
 
     for(int i : liczby2) {
-        std::cout << "insert(" << i << ")" << std::endl;
+        std::cout << "\ninsert(" << i << ")" << std::endl;
         drzewo2->insert(i);
         drzewo2->print_BST();
     }
 
     for(int i : liczby1) {
-        std::cout << "remove(" << i << ") " << drzewo2->remove(i) << std::endl;
+        drzewo2->remove(i);
+        std::cout << "\nremove(" << i << ") " << std::endl;
         drzewo2->print_BST();
     }
 

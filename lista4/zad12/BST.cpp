@@ -46,64 +46,70 @@ void BST::print_recursive(Node* node, int depth, char prefix){
     }
 }
 
-void BST::insert(int key) {
-    Node** current = &root;
-
-    while(*current != nullptr) current = (key < (*current)->key) ? &((*current)->left) : &((*current)->right); counter_if++; counter_swap++;
-
-    *current = new Node(key);
-    counter_swap++;
+void BST::insert_recursive(Node** node, int key) {
+    if(*node == nullptr) {
+        *node = new Node(key);
+        counter_swap++;
+    }
+    else if(key < (*node)->key) {
+        insert_recursive(&((*node)->left), key);
+        counter_if++;
+    }
+    else {
+        insert_recursive(&((*node)->right), key);
+    }
 }
 
-bool BST::remove(int key) {
-    counter_swap+=2;
-    Node** parent = nullptr;
-    Node** current = &root;
+void BST::insert(int key) {
+    insert_recursive(&root, key);
+}
 
-    counter_if++;
-    while(*current != nullptr && (*current)->key != key) {
-        parent = current;
-        current = (key < (*current)->key) ? &((*current)->left) : &((*current)->right);
-
-        counter_if+=2;
-        counter_swap+=2;
-    }
-
-    if(*current == nullptr) return false;
-
-    if((*current)->left == nullptr) {
-        Node* temp = (*current)->right;
-        delete *current;
-        *current = temp;
+Node* BST::min_node(Node* node) {
+    if (node == nullptr) {
         counter_swap++;
-    } else if((*current)->right == nullptr) {
-        Node* temp = (*current)->left;
-        delete *current;
-        *current = temp;
-        counter_swap++;
-    } else {
-        counter_swap+=2;
-        Node* succ_parent = *current;
-        Node* succ = (*current)->right;
-
-        while(succ->left != nullptr) {
-            succ_parent = succ;
-            succ = succ->left;
-            counter_swap+=2;
-        }
-
-        if(succ_parent != *current) {
-            succ_parent->left = succ->right;
-            counter_swap++;
-        }
-        else {
-            succ_parent->right = succ->right; counter_swap++;
-        }
-        (*current)->key = succ->key;
-
-        delete succ;
+        return nullptr;
     }
-    return true;
+    else if (node->left == nullptr) {
+        counter_swap+=2;
+        return node;
+    }
+    else {
+        counter_swap+=2;
+        return min_node(node->left);
+    }
+}
+
+Node* BST::remove_recursive(Node* node, int key) {
+    Node* tmp;
+    counter_swap++;
+
+    if (node == nullptr)
+        return nullptr;
+    else if (key < node->key) {
+        counter_if++;
+        node->left = remove_recursive(node->left, key);
+    }
+    else if (key > node->key) {
+        counter_if += 2;
+        node->right = remove_recursive(node->right, key);
+    }
+    else if (node->left && node->right) {
+        counter_if += 4;
+        tmp = min_node(node->right);
+        node->key = tmp->key;
+        node->right = remove_recursive(node->right, node->key);
+    }
+    else {
+        counter_if += 4;
+        counter_swap += 2;
+        tmp = node;
+        if(node->left == nullptr)
+            node = node->right;
+        else if(node->right == nullptr)
+            node = node->left;
+        delete tmp;
+    }
+    return node;
 }
 
 int BST::height() {
@@ -119,4 +125,8 @@ void BST::print_BST() {
 
     delete [] left_trace;
     delete [] right_trace;
+}
+
+void BST::remove(int key) {
+    Node* temp = remove_recursive(root, key);
 }

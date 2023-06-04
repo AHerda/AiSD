@@ -20,14 +20,17 @@ private:
 
     int height_recursive(Node* node);
     void print_recursive(Node* node, int depth, char prefix);
+    void insert_recursive(Node** node, int key);
+    Node* remove_recursive(Node* node, int key);
+    Node* min_node(Node* node);
 
 public:
     int counter_if;
     int counter_swap;
     BST();
 
-    void insert(int keyl);
-    bool remove(int key);
+    void insert(int key);
+    void remove(int key);
     int height();
     void print_BST();
 };
