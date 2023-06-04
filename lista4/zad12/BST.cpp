@@ -15,7 +15,7 @@ int BST::height_recursive(Node* node) {
     return std::max(lh, rh) + 1;
 }
 
-void BST::print_recursive(Node* node, int depth, char prefix){
+void BST::print_recursive(Node* node, int depth, char prefix) {
     if(node == nullptr) return;
     if(node->left != nullptr) print_recursive(node->left, depth + 1, '/');
 
@@ -79,37 +79,39 @@ Node* BST::min_node(Node* node) {
     }
 }
 
-Node* BST::remove_recursive(Node* node, int key) {
+Node* BST::remove_recursive(Node** node, int key) {
     Node* tmp;
     counter_swap++;
 
-    if (node == nullptr)
+    if (*node == nullptr)
         return nullptr;
-    else if (key < node->key) {
+    else if (key < (*node)->key) {
         counter_if++;
-        node->left = remove_recursive(node->left, key);
+        (*node)->left = remove_recursive(&((*node)->left), key);
     }
-    else if (key > node->key) {
+    else if (key > (*node)->key) {
         counter_if += 2;
-        node->right = remove_recursive(node->right, key);
+        (*node)->right = remove_recursive(&((*node)->right), key);
     }
-    else if (node->left && node->right) {
+
+    
+    else if ((*node)->left && (*node)->right) {
         counter_if += 4;
-        tmp = min_node(node->right);
-        node->key = tmp->key;
-        node->right = remove_recursive(node->right, node->key);
+        tmp = min_node((*node)->right);
+        (*node)->key = tmp->key;
+        (*node)->right = remove_recursive(&((*node)->right), (*node)->key);
     }
     else {
         counter_if += 4;
         counter_swap += 2;
-        tmp = node;
-        if(node->left == nullptr)
-            node = node->right;
-        else if(node->right == nullptr)
-            node = node->left;
+        tmp = *node;
+        if((*node)->left == nullptr)
+            *node = (*node)->right;
+        else if((*node)->right == nullptr)
+            (*node) = (*node)->left;
         delete tmp;
     }
-    return node;
+    return *node;
 }
 
 int BST::height() {
@@ -128,5 +130,5 @@ void BST::print_BST() {
 }
 
 void BST::remove(int key) {
-    Node* temp = remove_recursive(root, key);
+    Node* temp = remove_recursive(&root, key);
 }

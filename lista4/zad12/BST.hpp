@@ -21,12 +21,12 @@ private:
     int height_recursive(Node* node);
     void print_recursive(Node* node, int depth, char prefix);
     void insert_recursive(Node** node, int key);
-    Node* remove_recursive(Node* node, int key);
+    Node* remove_recursive(Node** node, int key);
     Node* min_node(Node* node);
 
 public:
-    int counter_if;
-    int counter_swap;
+    long long counter_if;
+    long long counter_swap;
     BST();
 
     void insert(int key);

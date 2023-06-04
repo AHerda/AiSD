@@ -2,16 +2,16 @@
 #include <fstream>
 #include <vector>
 
-#include "BST.hpp"
+#include "RBBST.hpp"
 #include "generator.hpp"
 
 int main(int argc, char** argv) {
     std::ofstream myfile;
-    myfile.open("zad61.txt");
+    myfile.open("zad41.txt");
 
     for(int n = 10000; n <= 100000; n += 10000) {
         for(int i = 0; i < 20; i++) {
-            BST drzewo = BST();
+            RBBST drzewo = RBBST();
 
             std::vector<int> liczby1;
             generator_asc(liczby1, n);
@@ -30,11 +30,11 @@ int main(int argc, char** argv) {
 
     myfile.close();
 
-    myfile.open("zad62.txt");
+    myfile.open("zad42.txt");
 
     for(int n = 10000; n <= 100000; n += 10000) {
         for(int i = 0; i < 20; i++) {
-            BST drzewo = BST();
+            RBBST drzewo = RBBST();
 
             std::vector<int> liczby1;
             generator_rand(liczby1, n);

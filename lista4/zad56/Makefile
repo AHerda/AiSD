@@ -1,7 +1,8 @@
-flags = -W -pedantic -O3
+flags = -W -pedantic -O5
 
-all: zad1.cpp BST.cpp
-	g++ $(flags) -o main zad1.cpp BST.cpp
+all: zad5.cpp zad6.cpp SBST.cpp
+	g++ $(flags) -o zad5 zad5.cpp SBST.cpp
+	g++ $(flags) -o zad6 zad6.cpp splay.cpp
 
 clean:
-	rm main
+	rm zad5 zad6
