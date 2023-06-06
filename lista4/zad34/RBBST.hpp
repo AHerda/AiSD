@@ -42,12 +42,11 @@ private:
     auto minimum(std::shared_ptr<Node>) -> std::shared_ptr<Node>;
     auto maximum(std::shared_ptr<Node>) -> std::shared_ptr<Node>;
     auto searchInTreeHelper(std::shared_ptr<Node> node, int key) -> std::shared_ptr<Node>;
-    void transplant(std::shared_ptr<Node>, std::shared_ptr<Node>);
     auto preOrderHelper(std::shared_ptr<Node>) -> void;
     auto postOrderHelper(std::shared_ptr<Node>) -> void;
     auto inOrderHelper(std::shared_ptr<Node>) -> void;
-    void print_recursive(std::shared_ptr<Node> node, int depth, char prefix);
-    int height_recursive(std::shared_ptr<Node> node);
+    auto print_recursive(std::shared_ptr<Node> node, int depth, char prefix) -> void;
+    auto height_recursive(std::shared_ptr<Node> node) -> int;
 
 public:
     long long counter_if;
@@ -62,8 +61,8 @@ public:
     auto postorder() -> void;
     auto remove(int) -> void;
     auto successor(std::shared_ptr<Node>) -> std::shared_ptr<Node>;
-    [[maybe_unused]] auto searchInTree(int key) -> std::shared_ptr<Node>;
-    [[maybe_unused]] auto getRoot() -> std::shared_ptr<Node>;
+    auto searchInTree(int key) -> std::shared_ptr<Node>;
+    auto getRoot() -> std::shared_ptr<Node>;
     auto print_BST() -> void;
-    int height();
+    auto height() -> int;
 };

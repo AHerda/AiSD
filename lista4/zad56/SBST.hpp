@@ -52,7 +52,6 @@ public:
     auto getRoot() -> std::shared_ptr<Node>;
 
     auto remove(int) -> void;
-    auto print() -> void;
     auto height() -> int;
     auto print_BST() -> void;
 };
