@@ -48,11 +48,11 @@ public:
 
     FibHeap();
     FibHeap(Node*);
-    bool isEmpty();
-    void insert(Node*);
-    void Union(FibHeap*);
-    Node* first();
-    Node* extractMin();
-    void decreaseKey(Node*, int);
-    void Delete(Node*);
+    auto isEmpty() -> bool;
+    auto insert(Node*) -> void;
+    auto Union(FibHeap*) -> void;
+    auto first() -> Node*;
+    auto extractMin() -> Node*;
+    auto decreaseKey(Node*, int) -> void;
+    auto Delete(Node*) -> void;
 };

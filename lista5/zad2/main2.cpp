@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
         }
 
         H1->Union(&(*H2));
-        file << end() << " " << (H1->get_counter_temp() + H2->get_counter_temp()) << std::endl;
+        file << end() << " " << H1->get_counter_temp() << std::endl;
 
         for(int n = 0; n < 1000; n++) {
             helper = H1->extractMin();
@@ -98,6 +98,7 @@ int main(int argc, char** argv) {
             H1->insert(new Node(mt() % (2 * n)));
             H2->insert(new Node(mt() % (2 * n)));
         }
+
         int counter = H1->get_counter_temp() + H2->get_counter_temp();
 
         H1->Union(&(*H2));

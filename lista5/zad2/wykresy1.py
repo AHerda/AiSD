@@ -47,22 +47,3 @@ plt.legend(loc = 2, fontsize = "small")
 
 plt.savefig("wykresy/bin_n_1000.png", dpi=300)
 plt.close()
-
-dane = np.empty(100, dtype=int)
-
-file = open(f"wyniki/bin_2.txt")
-dane_str = file.read().split()[1::2]
-
-for j in range(len(dane_str)):
-    dane[j] = int(dane_str[j])
-
-plt.figure(3)
-
-plt.title("Wykresy dla n=\{100, ... , 10000\}")
-plt.xlabel("n")
-plt.ylabel("# Porównań kluczy")
-
-plt.plot(np.linspace(100, 10000, 100, True), dane, "b-")
-
-plt.savefig("wykresy/bin.png", dpi=300)
-plt.close()

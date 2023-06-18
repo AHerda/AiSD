@@ -17,17 +17,17 @@ FibHeap::FibHeap(Node *n)
     this->N = 1;
 }
 
-bool FibHeap::isEmpty()
+auto FibHeap::isEmpty() -> bool
 {
     return (this->min == nullptr);
 }
 
-void FibHeap::insert(Node *n)
+auto FibHeap::insert(Node *n) -> void
 {
     this->Union(new FibHeap(n));
 }
 
-void FibHeap::Union(FibHeap *h)
+auto FibHeap::Union(FibHeap *h) -> void
 {
     this->N += h->N;
     if (h->isEmpty()) return;
@@ -49,12 +49,12 @@ void FibHeap::Union(FibHeap *h)
     if (h->min->key < this->min->key) this->min = h->min;
 }
 
-Node* FibHeap::first()
+auto FibHeap::first() -> Node*
 {
     return this->min;
 }
 
-Node* FibHeap::extractMin()
+auto FibHeap::extractMin() -> Node*
 {
     Node *ret = this->min;
     this->N = this->N - 1;
@@ -171,7 +171,7 @@ Node* FibHeap::extractMin()
     return ret;
 }
 
-void FibHeap::decreaseKey(Node *n, int newKey)
+auto FibHeap::decreaseKey(Node *n, int newKey) -> void
 {
     // Precondition: newKey < n->key
     n->key = newKey;
@@ -243,7 +243,7 @@ void FibHeap::decreaseKey(Node *n, int newKey)
     }
 }
 
-void FibHeap::Delete(Node *n)
+auto FibHeap::Delete(Node *n) -> void
 {
     this->decreaseKey(n, INT_MIN);
     this->extractMin();
