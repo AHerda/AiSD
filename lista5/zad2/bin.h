@@ -1,31 +1,50 @@
 #pragma once
-#include <memory>
-#include <vector>
-#include <limits.h>
+
+#include <iostream>
+#include <queue>
+#include <climits>
+#include <cmath>
 
 struct Node
 {
-    std::shared_ptr<Node> child;
-    std::shared_ptr<Node> parent;
-    std::shared_ptr<Node> sibling;
     int key;
-    int degree;
+    int order;
+    Node *sibling, *parent, *child;
 
-    Node(int key) : key(key), degree(0), parent(nullptr), sibling(nullptr) {}
+    Node(int key)
+    {
+        this -> key = key;
+        this -> order = 0;
+        this -> sibling = this -> parent = this -> child = nullptr;
+    }
 };
 
-class BinHeap
+class BHeap
 {
-private:
-    std::shared_ptr<Node> head;
+    int counter_if;
+    int counter_if_temp;
+    Node *head;
+    Node *min;
+    
+    auto combineTrees(Node *root1, Node *root2) -> void;
+    auto combineHeaps(BHeap *heap1, BHeap *heap2) -> Node*;
 
 public:
-    BinHeap();
-    auto getHead() -> std::shared_ptr<Node>;
-    auto setHead(std::shared_ptr<Node> head) -> void;
-    auto minimum() -> std::shared_ptr<Node>;
-};
+    auto reset_counter() -> void;
+    auto reset_counter_temp() -> void;
+    auto get_counter() -> int;
+    auto get_counter_temp() -> int;
+    auto counter_increase() -> void;
 
-auto link(std::shared_ptr<BinHeap> H1, std::shared_ptr<BinHeap> H2) -> void;
-auto merge(std::shared_ptr<BinHeap> H1, std::shared_ptr<BinHeap> H2) -> std::shared_ptr<Node>;
-auto bhUnion(std::shared_ptr<BinHeap> H1, std::shared_ptr<BinHeap> H2) -> std::shared_ptr<BinHeap>;
+    BHeap();
+    BHeap(Node* root);
+    auto isEmpty() -> bool;
+    auto insert(Node* root) -> void;
+    auto unionHeap(BHeap *heap) -> void;
+    auto first() -> Node*;
+    auto extractMin() -> Node*;
+    auto decreaseKey(Node *root, int val) -> void;
+    auto Delete(Node *root) -> void;
+    auto printTree(Node* root) -> void;
+    auto printHeap() -> void;
+};
