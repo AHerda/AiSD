@@ -61,11 +61,13 @@ auto BHeap::combineHeaps(BHeap *heap1, BHeap *heap2)->Node*
 BHeap::BHeap()
 {
     this->head = nullptr;
+    reset_counter();
 }
 
 BHeap::BHeap(Node* root)
 {
     this->head = root;
+    reset_counter();
 }
 
 auto BHeap::isEmpty()->bool
@@ -252,6 +254,7 @@ auto BHeap::printHeap()->void
 auto BHeap::reset_counter()->void
 {
     counter_if = 0;
+    counter_if_temp = 0;
 }
 
 auto BHeap::reset_counter_temp()->void
@@ -267,7 +270,7 @@ auto BHeap::get_counter()->int
 auto BHeap::get_counter_temp()->int
 {
     int temp = counter_if_temp;
-    counter_if_temp = 0;
+    reset_counter_temp();
     return temp;
 }
 

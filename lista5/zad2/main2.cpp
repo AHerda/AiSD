@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 #include <memory>
-#include "bin.h"
+#include "fibb.h"
 
 int operacja;
 
@@ -22,12 +22,12 @@ int main(int argc, char** argv) {
     std::ofstream file;
 
     for(int i = 1; i <= 5; i++){
-        file.open("wyniki/bin_1_n_500_" + std::to_string(i) + ".txt");
+        file.open("wyniki/fibb_1_n_500_" + std::to_string(i) + ".txt");
         reset();
 
-        std::shared_ptr<BHeap> H1(new BHeap());
+        std::shared_ptr<FibHeap> H1(new FibHeap());
         file << end() << " " << H1->get_counter_temp() << std::endl;
-        std::shared_ptr<BHeap> H2(new BHeap());
+        std::shared_ptr<FibHeap> H2(new FibHeap());
         file << end() << " " << H2->get_counter_temp() << std::endl;
 
         Node* helper;
@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
             file << end() << " " << H2->get_counter_temp() << std::endl;
         }
 
-        H1->unionHeap(&(*H2));
+        H1->Union(&(*H2));
         file << end() << " " << (H1->get_counter_temp() + H2->get_counter_temp()) << std::endl;
 
         for(int n = 0; n < 1000; n++) {
@@ -55,12 +55,12 @@ int main(int argc, char** argv) {
     }
 
     for(int i = 1; i <= 5; i++){
-        file.open("wyniki/bin_1_n_1000_" + std::to_string(i) + ".txt");
+        file.open("wyniki/fibb_1_n_1000_" + std::to_string(i) + ".txt");
         reset();
 
-        std::shared_ptr<BHeap> H1(new BHeap());
+        std::shared_ptr<FibHeap> H1(new FibHeap());
         file << end() << " " << H1->get_counter_temp() << std::endl;
-        std::shared_ptr<BHeap> H2(new BHeap());
+        std::shared_ptr<FibHeap> H2(new FibHeap());
         file << end() << " " << H2->get_counter_temp() << std::endl;
 
         Node* helper;
@@ -72,8 +72,8 @@ int main(int argc, char** argv) {
             H2->insert(new Node(mt() % (2 * 1000)));
             file << end() << " " << H2->get_counter_temp() << std::endl;
         }
-
-        H1->unionHeap(&(*H2));
+    
+        H1->Union(&(*H2));
         file << end() << " " << (H1->get_counter_temp() + H2->get_counter_temp()) << std::endl;
 
         for(int n = 0; n < 2000; n++) {
@@ -85,14 +85,12 @@ int main(int argc, char** argv) {
         file.close();
     }
 
-    file.open("wyniki/bin_2.txt");
-    std::cout << "dupaaaaaaaaaaaaa" << std::endl;
+    file.open("wyniki/fibb_2.txt");
     for(int n = 100; n <= 10000; n+=100){
-        std::cout << n << std::endl;
         reset();
 
-        std::shared_ptr<BHeap> H1(new BHeap());
-        std::shared_ptr<BHeap> H2(new BHeap());
+        std::shared_ptr<FibHeap> H1(new FibHeap());
+        std::shared_ptr<FibHeap> H2(new FibHeap());
 
         Node* helper;
 
@@ -102,7 +100,7 @@ int main(int argc, char** argv) {
         }
         int counter = H1->get_counter_temp() + H2->get_counter_temp();
 
-        H1->unionHeap(&(*H2));
+        H1->Union(&(*H2));
 
         for(int i = 0; i < 2 * n; i++) {
             helper = H1->extractMin();
